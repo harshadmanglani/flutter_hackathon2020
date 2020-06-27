@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter95/flutter95.dart';
 
 //categories of the retro quizzes
+int toolBar = 1;
 
 class PastHome extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ class _PastHomeState extends State<PastHome> {
           Item95(
             label: 'Leaderboard',
             onTap: (context) {
-              Navigator.pushNamed(context, '/leaderboard');
+              setState(() {});
             },
           ),
           Item95(
@@ -40,14 +41,14 @@ class _PastHomeState extends State<PastHome> {
             onTap: (context) {},
           ),
         ]),
-        body: retroBody());
+        body: toolBar == 1 ? LeaderBoard() : retroBody());
   }
 }
 
 Widget retroBody() {
   return Container(
     child: Column(
-      children: <Widget>[],
+      children: <Widget>[Text("hi")],
     ),
   );
 }
@@ -65,6 +66,7 @@ Menu95 _buildMenu(BuildContext context) {
       ),
     ],
     onItemSelected: (item) {
+      toolBar = item;
       if (item == 1) {
         Navigator.pushNamed(context, '/retrotech');
       } else if (item == 2) {
@@ -84,7 +86,23 @@ class LeaderBoard extends StatefulWidget {
 class _LeaderBoardState extends State<LeaderBoard> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: Expanded(
+        child: ListView.builder(
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return Elevation95(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Item $index',
+                    style: Flutter95.textStyle,
+                  ),
+                ),
+              );
+            }),
+      ),
+    );
   }
 }
 
