@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter95/flutter95.dart';
+import 'package:time_machine/backend/apiprovider.dart';
 import 'dart:async';
 import 'package:time_machine/models/question_model.dart';
 import 'package:time_machine/screens/retroresult.dart';
@@ -6,32 +8,33 @@ import 'package:time_machine/screens/retroresult.dart';
 class QuizPage extends StatefulWidget {
   final List<Question> myquestion;
   QuizPage(this.myquestion);
-  // var myquestion = Question();
   @override
   _QuizPageState createState() => _QuizPageState();
 }
 
 class _QuizPageState extends State<QuizPage> {
-  // var myquestion = Question();
-
-  Color colortoshow = Colors.grey;
-  Color rightanswer = Colors.green;
-  Color wronganswer = Colors.red;
+  Color colorToShow = Colors.black;
+  Color rightAnswer = Colors.green;
+  Color wrongAnswer = Colors.red;
+  ApiProvider obj;
   int score = 0;
   int i = 0;
   int timer = 120;
   String showtimer = '120';
 
-  Map<String, Color> btncolor = {
-    "a": Colors.grey,
-    "b": Colors.grey,
-    "c": Colors.grey,
-    "d": Colors.grey
-  };
+  Map<String, Color> btncolor;
 
   @override
   void initState() {
-    startTimer();
+    btncolor = {
+      "a": colorToShow,
+      "b": colorToShow,
+      "c": colorToShow,
+      "d": colorToShow
+    };
+    obj = ApiProvider();
+    obj.getParsedQuestionList();
+    // startTimer();
     super.initState();
   }
 
@@ -59,10 +62,10 @@ class _QuizPageState extends State<QuizPage> {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => RetroResult(score: score)));
       }
-      btncolor['a'] = Colors.grey;
-      btncolor['b'] = Colors.grey;
-      btncolor['c'] = Colors.grey;
-      btncolor['d'] = Colors.grey;
+      btncolor['a'] = colorToShow;
+      btncolor['b'] = colorToShow;
+      btncolor['c'] = colorToShow;
+      btncolor['d'] = colorToShow;
     });
   }
 
@@ -71,34 +74,27 @@ class _QuizPageState extends State<QuizPage> {
         widget.myquestion[i].options[ans]) {
       score += 10;
       print(score);
-      colortoshow = rightanswer;
+      colorToShow = rightAnswer;
     } else {
-      colortoshow = wronganswer;
+      colorToShow = wrongAnswer;
     }
     setState(() {
-      btncolor[ans] = colortoshow;
+      btncolor[ans] = colorToShow;
     });
     Timer(Duration(seconds: 1), nextQuestion);
   }
 
   Widget choiceButton(String option, String key) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: 10.0,
-        horizontal: 20.0,
-      ),
-      child: MaterialButton(
-        onPressed: () => checkAnswer(key),
-        child: Text(
-          option,
-          style: TextStyle(color: Colors.teal),
-          maxLines: 1,
-        ),
-        color: btncolor[key],
-        minWidth: 160.0,
-        height: 50.0,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+    return Button95(
+      onTap: () => checkAnswer(key),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Text(
+            option,
+            style: TextStyle(color: btncolor[key]),
+          ),
+        ],
       ),
     );
   }
@@ -110,57 +106,63 @@ class _QuizPageState extends State<QuizPage> {
         return showDialog(
             context: context,
             builder: (context) => AlertDialog(
-                  title: Text("Time Quiz"),
-                  content: Text("You cannot go back!!"),
+                  title: Text("Timed Quiz"),
+                  content: Text(
+                    "You cannot go back! :(",
+                    style: Flutter95.textStyle,
+                  ),
                   actions: <Widget>[
                     FlatButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text('Ok'),
+                      child: Elevation95(
+                          child: Text('Ok', style: Flutter95.textStyle)),
                     )
                   ],
                 ));
       },
-      child: Scaffold(
-        body: Column(
-          children: <Widget>[
-            Expanded(
+      child: Scaffold95(
+        title: "Tech Quiz",
+        body: Expanded(
+          child: Column(
+            children: <Widget>[
+              Expanded(
                 flex: 3,
                 child: Container(
                   padding: EdgeInsets.all(15.0),
                   alignment: Alignment.bottomCenter,
                   child: Text(
                     widget.myquestion[i].question,
-                    style: TextStyle(
-                      fontSize: 16.0,
+                    style: Flutter95.textStyle,
+                  ),
+                ),
+              ),
+              Expanded(
+                  flex: 8,
+                  child: Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        choiceButton(widget.myquestion[i].options['a'], 'a'),
+                        choiceButton(widget.myquestion[i].options['b'], 'b'),
+                        choiceButton(widget.myquestion[i].options['c'], 'c'),
+                        choiceButton(widget.myquestion[i].options['d'], 'd'),
+                      ],
                     ),
-                  ),
-                )),
-            Expanded(
-                flex: 8,
-                child: Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      choiceButton(widget.myquestion[i].options['a'], 'a'),
-                      choiceButton(widget.myquestion[i].options['b'], 'b'),
-                      choiceButton(widget.myquestion[i].options['c'], 'c'),
-                      choiceButton(widget.myquestion[i].options['d'], 'd'),
-                    ],
-                  ),
-                )),
-            Expanded(
-                flex: 1,
-                child: Container(
-                  alignment: Alignment.topCenter,
-                  child: Center(
-                    child: Text(
-                      showtimer,
+                  )),
+              Expanded(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    child: Center(
+                      child: Text(
+                        showtimer,
+                      ),
                     ),
-                  ),
-                )),
-          ],
+                  )),
+            ],
+          ),
         ),
       ),
     );
