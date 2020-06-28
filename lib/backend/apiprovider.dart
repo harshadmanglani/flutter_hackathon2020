@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:time_machine/models/question_model.dart';
 import 'dart:convert';
+import 'package:time_machine/models/leaderboard_model.dart';
 
 class ApiProvider {
   String baseUrl = "http://asynchack20.azurewebsites.net/graphql/";
@@ -8,6 +10,7 @@ class ApiProvider {
   List<dynamic> unparsedResponse = [];
   String responseFromApi;
   Map<dynamic, dynamic> parsedResponse;
+  List<LeaderBoardEntry> leaderBoardList = [];
 
   Future<void> getAllQuestions(int id) async {
     questionList = [];
@@ -45,6 +48,48 @@ class ApiProvider {
       }
 
       return questionList;
+    } catch (error) {
+      print("error: $error");
+    }
+  }
+
+  Future<Map<dynamic, dynamic>> sendDataToLeaderBoard(
+      String username, int score, String category) async {
+    try {
+      Response response = await post(baseUrl, body: {
+        "query":
+            'mutation{ createLeader(username:"$username", scorestr:"$score", category:"$category"){ id, score, username, category} }'
+      });
+      print(response.body);
+      responseFromApi = response.body.replaceAll(r'\', '');
+      parsedResponse = json.decode(responseFromApi);
+      return parsedResponse;
+    } catch (error) {
+      print("error: $error");
+    }
+  }
+
+  Future<void> getDataFromLeaderBoard() async {
+    leaderBoardList = [];
+    try {
+      Response response;
+      response = await post(baseUrl,
+          body: {"query": '{ leaderboardModel{ username, score, category} }'});
+      // print(response.body);
+      // responseFromApi = json.encode(response.body);
+      // print(response.body);
+      responseFromApi = response.body.replaceAll(r'\', '');
+      parsedResponse = json.decode(responseFromApi);
+      // print(parsedResponse);
+      unparsedResponse = parsedResponse["data"]["leaderboardModel"];
+      for (int i = 0; i < unparsedResponse.length; i++) {
+        print(unparsedResponse[i]);
+        leaderBoardList.add(LeaderBoardEntry(
+            userName: unparsedResponse[i]["username"],
+            score: unparsedResponse[i]["score"],
+            category: unparsedResponse[i]["category"]));
+      }
+      return leaderBoardList;
     } catch (error) {
       print("error: $error");
     }

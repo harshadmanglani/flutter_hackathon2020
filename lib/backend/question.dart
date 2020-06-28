@@ -7,7 +7,8 @@ import 'package:time_machine/screens/retroresult.dart';
 
 class QuizPage extends StatefulWidget {
   final List<Question> questionList;
-  QuizPage(this.questionList);
+  int id;
+  QuizPage(this.questionList, this.id);
   @override
   _QuizPageState createState() => _QuizPageState();
 }
@@ -20,16 +21,18 @@ class _QuizPageState extends State<QuizPage> {
   ApiProvider obj;
   int score = 0;
   int i = 0;
-  int timer = 31;
-  String showtimer = '10';
+  int timer = 30;
+  String showtimer = '30';
   BuildContext originalContext;
   bool cancelTimer;
+  int id;
 
   Map<String, Color> btncolor;
 
   @override
   void initState() {
     questionList = widget.questionList;
+    id = widget.id;
     btncolor = {
       "a": colorToShow,
       "b": colorToShow,
@@ -39,6 +42,13 @@ class _QuizPageState extends State<QuizPage> {
     cancelTimer = false;
     startTimer();
     super.initState();
+  }
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
   }
 
   void startTimer() async {
@@ -69,11 +79,14 @@ class _QuizPageState extends State<QuizPage> {
     cancelTimer = false;
     setState(() {
       if (i == questionList.length - 1) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => RetroResult(score: score)));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => RetroResult(
+                  score: score,
+                  id: id,
+                )));
       } else {
         i++;
-        timer = 31;
+        timer = 30;
       }
       btncolor['a'] = colorToShow;
       btncolor['b'] = colorToShow;
@@ -152,45 +165,45 @@ class _QuizPageState extends State<QuizPage> {
           Navigator.pop(context);
       },
       child: Scaffold95(
-        title: "Tech Quiz",
+        title: id == 1 ? "Tech Quiz" : "Cars Quiz",
         body: Expanded(
           child: Column(
             children: <Widget>[
+              SizedBox(
+                height: 20.0,
+              ),
               Expanded(
-                flex: 3,
-                child: Container(
+                child: Padding(
                   padding: EdgeInsets.all(15.0),
-                  alignment: Alignment.bottomCenter,
                   child: Text(
                     questionList[i].question,
                     style: Flutter95.textStyle,
                   ),
                 ),
               ),
+              SizedBox(
+                height: 200,
+              ),
               Expanded(
-                  flex: 8,
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        choiceButton(questionList[i].options['a'], 'a'),
-                        choiceButton(questionList[i].options['b'], 'b'),
-                        choiceButton(questionList[i].options['c'], 'c'),
-                        choiceButton(questionList[i].options['d'], 'd'),
-                      ],
-                    ),
-                  )),
-              Expanded(
-                  flex: 1,
-                  child: Container(
-                    alignment: Alignment.topCenter,
-                    child: Center(
-                      child: Text(
-                        showtimer,
-                        style: Flutter95.textStyle,
-                      ),
-                    ),
-                  )),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    choiceButton(questionList[i].options['a'], 'a'),
+                    choiceButton(questionList[i].options['b'], 'b'),
+                    choiceButton(questionList[i].options['c'], 'c'),
+                    choiceButton(questionList[i].options['d'], 'd'),
+                  ],
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 18.0),
+                  child: Text(
+                    showtimer,
+                    style: Flutter95.textStyle,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

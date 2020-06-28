@@ -32,6 +32,7 @@ dependencies:
   custom_loading_indicator: ^0.0.2+1
   video_player: ">=0.10.11+1 <2.0.0"
   flutter95: ^0.0.7
+  parallax_image: ^0.3.1+1
 
 dev_dependencies:
   flutter_test:
@@ -51,12 +52,15 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/time_machine.png
-    - assets/homeback.jpg
     - assets/wormhole.mp4
-    - assets/retro_car.jpg
-    - assets/record_player.jpg
+    - assets/img1.jpg
+    - assets/img2.jpg
+    - assets/img3.jpg
+    - assets/img4.jpg
+    - assets/img5.jpg
+    - assets/img6.jpg
+    - assets/img7.jpg
     - assets/homeback2.jpg
-    - assets/homeback3.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
