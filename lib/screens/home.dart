@@ -2,18 +2,81 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:async';
-import 'package:time_machine/screens/retro.dart';
 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin {
+  Animation<double> _animation, _leftAnimation, _rightAnimation;
+  AnimationController _controller, _left, _right;
+  CurvedAnimation _curve, _leftCurve, _rightCurve;
+  double x = 0.0, y = 0.0;
+  int _animationValue = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    normalAnimation();
+    pastAnimation();
+    futureAnimation();
+  }
+
+  normalAnimation() {
+    _controller = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 1000));
+
+    _curve = CurvedAnimation(
+        parent: _controller, curve: Interval(0.0, 1.0, curve: Curves.ease));
+
+    _animation = Tween(begin: -50.0, end: -100.0).animate(_curve);
+
+    _controller.addListener(() {
+      setState(() {
+        x = 0.0;
+        y = _animation.value;
+      });
+    });
+    _controller.repeat(reverse: true);
+  }
+
+  pastAnimation() {
+    _left = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 3000));
+
+    _leftCurve = CurvedAnimation(
+        parent: _left, curve: Interval(0.0, 1.0, curve: Curves.ease));
+
+    _leftAnimation = Tween(begin: 0.0, end: -350.0).animate(_leftCurve);
+    _left.addListener(() {
+      setState(() {
+        y = 0.0;
+        x = _leftAnimation.value;
+      });
+    });
+  }
+
+  futureAnimation() {
+    _right = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 3000));
+
+    _rightCurve = CurvedAnimation(
+        parent: _right, curve: Interval(0.0, 1.0, curve: Curves.ease));
+
+    _rightAnimation = Tween(begin: 0.0, end: 350.0).animate(_rightCurve);
+    _right.addListener(() {
+      setState(() {
+        y = 0.0;
+        x = _rightAnimation.value;
+      });
+    });
+  }
+
   dynamic buttonShape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(18.0),
       side: BorderSide(color: Colors.white));
-  double currentValue = 21.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,48 +88,57 @@ class _HomeState extends State<Home> {
                     textStyle: TextStyle(fontSize: 30.0)))),
       ),
       body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/homeback2.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Center(
           child: Column(
             children: <Widget>[
-              SizedBox(height: 30.0),
-              Padding(
-                padding: const EdgeInsets.all(13.0),
-                child: Text(
-                    "Feel like meeting Steve Jobs or visiting a Mars colony?",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0)),
-              ),
               SizedBox(height: 20.0),
               RaisedButton(
-                  color: Colors.blue,
+                  color: Colors.purple[400],
                   shape: buttonShape,
                   onPressed: () {
-                    Navigator.pushNamed(context, '/wormhole');
+                    playPastAnimation();
+                    Future.delayed(const Duration(seconds: 2), () {
+                      setState(() {
+                        Navigator.pushNamed(context, '/wormhole');
+                      });
+                    });
                     Future.delayed(const Duration(seconds: 4), () {
                       setState(() {
-                    currentValue = 20.0;
-                    Navigator.pushReplacementNamed(context, '/past');
-                    });
+                        Navigator.pushReplacementNamed(context, '/past');
+                        resetAnimation();
+                      });
                     });
                   },
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(25.0, 3.0, 25.0, 3.0),
+                    padding: const EdgeInsets.fromLTRB(36.0, 8.0, 36.0, 8.0),
                     child: Text("Past",
-                        style: GoogleFonts.ibmPlexMono(
-                            textStyle: TextStyle(fontSize: 30.0))),
+                        style: GoogleFonts.cinzel(
+                            textStyle: TextStyle(
+                                fontSize: 24.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold))),
                   )),
               SizedBox(height: 30.0),
               RaisedButton(
-                  color: Colors.red,
+                  color: Colors.purple[400],
                   shape: buttonShape,
                   onPressed: () {
-                    Navigator.pushNamed(context, '/wormhole');
+                    playFutureAnimation();
+                    Future.delayed(const Duration(seconds: 2), () {
+                      setState(() {
+                        Navigator.pushNamed(context, '/wormhole');
+                      });
+                    });
                     Future.delayed(const Duration(seconds: 4), () {
                       setState(() {
                         Navigator.pushReplacementNamed(context, '/future');
+                        resetAnimation();
                       });
                     });
                   },
@@ -79,100 +151,62 @@ class _HomeState extends State<Home> {
                                 fontSize: 24.0,
                                 fontWeight: FontWeight.bold))),
                   )),
-              SizedBox(height: 100),
-              HoppingTimeMachine(
-                imagePath: 'assets/time_machine.jpg',
+              SizedBox(height: 140),
+              hoppingTimeMachine(
+                imagePath: 'assets/time_machine.png',
               ),
-              // Slider(
-              //   value: currentValue,
-              //   activeColor: Colors.white,
-              //   inactiveColor: Colors.white,
-              //   min: 20,
-              //   max: 22,
-              //   divisions: 2,
-              //   onChanged: (val) => setState(() {
-              //     currentValue = val;
-              //     print(val);
-              //     if (currentValue == 20) {
-              //       Future.delayed(const Duration(seconds: 1), () {
-              //         setState(() {
-              //           currentValue = 20.0;
-              //           Navigator.pushNamed(context, '/past');
-              //         });
-              //       });
-              //     } else if (currentValue == 22) {
-              //       Future.delayed(const Duration(seconds: 1), () {
-              //         setState(() {
-              //           currentValue = 20.0;
-              //           Navigator.pushNamed(context, '/future');
-              //         });
-              //       });
-              //     } else {}
-              //   }),
-              // )
             ],
           ),
         ),
       ),
     );
   }
-}
 
-class HoppingTimeMachine extends StatefulWidget {
-  final String imagePath;
-
-  HoppingTimeMachine({this.imagePath});
-
-  @override
-  _HoppingTimeMachineState createState() => _HoppingTimeMachineState();
-}
-
-class _HoppingTimeMachineState extends State<HoppingTimeMachine>
-    with SingleTickerProviderStateMixin {
-  Animation<double> _animation;
-  AnimationController _controller;
-  CurvedAnimation _curve;
-  double y = 0.0;
-
-  String imagePath;
-
-  @override
-  void initState() {
-    super.initState();
-    imagePath = widget.imagePath;
-
-    _controller = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 1000));
-
-    _curve = CurvedAnimation(
-        parent: _controller, curve: Interval(0.0, 1.0, curve: Curves.ease));
-
-    _animation = Tween(begin: -50.0, end: -100.0).animate(_curve);
-
-    _controller.addListener(() {
-      setState(() {
-        y = _animation.value;
-      });
-    });
-    _controller.repeat(reverse: true);
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget hoppingTimeMachine({String imagePath}) {
     return AnimatedBuilder(
-        animation: _animation,
+        animation: _animationValue == 0
+            ? _animation
+            : _animationValue == 1 ? _leftAnimation : _rightAnimation,
         builder: (context, snapshot) {
           return Transform.translate(
-              offset: Offset(0, y),
-              child: Image.asset('assets/time_machine.jpg',
-                  width: 250, height: 200));
+              offset: Offset(x, y),
+              child: Image.asset(imagePath, width: 250, height: 230));
         });
+  }
+
+  playPastAnimation() {
+    setState(() {
+      _controller.stop();
+      _right.stop();
+      _animationValue = 1;
+      _left.forward();
+    });
+  }
+
+  playFutureAnimation() {
+    setState(() {
+      _controller.stop();
+      _left.stop();
+      _animationValue = 2;
+      _right.forward();
+    });
+  }
+
+  resetAnimation() {
+    setState(() {
+      _left.stop();
+      _right.stop();
+      _animationValue = 0;
+      _controller.repeat(reverse: true);
+    });
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
+    _controller.dispose();
+    _left.dispose();
+    _right.dispose();
   }
 }
 

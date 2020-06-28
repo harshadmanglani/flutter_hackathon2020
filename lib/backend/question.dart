@@ -32,8 +32,6 @@ class _QuizPageState extends State<QuizPage> {
       "c": colorToShow,
       "d": colorToShow
     };
-    obj = ApiProvider();
-    obj.getParsedQuestionList();
     // startTimer();
     super.initState();
   }

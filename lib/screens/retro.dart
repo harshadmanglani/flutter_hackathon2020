@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter95/flutter95.dart';
+import 'package:time_machine/backend/apiprovider.dart';
 import 'package:time_machine/backend/question.dart';
 import 'package:time_machine/models/question_model.dart';
 
@@ -89,31 +90,30 @@ class _LeaderBoardState extends State<LeaderBoard> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: (){
+      onWillPop: () {
         Navigator.pushNamed(context, '/wormhole');
         Future.delayed(const Duration(seconds: 4), () {
           setState(() {
-          Navigator.pop(context);
-          Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
           });
         });
       },
       child: Container(
         child: Expanded(
           child: ListView.builder(
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return Elevation95(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Item $index',
-                    style: Flutter95.textStyle,
+              itemCount: 3,
+              itemBuilder: (context, index) {
+                return Elevation95(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Item $index',
+                      style: Flutter95.textStyle,
+                    ),
                   ),
-                ),
-              );
-            }
-          ),
+                );
+              }),
         ),
       ),
     );
@@ -126,15 +126,27 @@ class RetroTech extends StatefulWidget {
 }
 
 class _RetroTechState extends State<RetroTech> {
-  List<Question> questionList = [
-    Question(
-        options: {"a": "a", "b": "b", "c": "c", "d": "d"},
-        question: "Hello",
-        correctAnswer: "d")
-  ];
+  ApiProvider obj;
+  List<Question> questionList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    obj = ApiProvider();
+    // questionList = obj.getTechQuestionList();
+    // fillQuestions();
+  }
+
+  Future fillQuestions() async {
+    // questionList = await obj.getTechQuestionList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return QuizPage(questionList);
+    // return QuizPage(questionList);
+    // fillQuestions();
+    print(questionList);
+    return Container();
   }
 }
 
