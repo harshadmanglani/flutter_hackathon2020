@@ -88,9 +88,19 @@ class LeaderBoard extends StatefulWidget {
 class _LeaderBoardState extends State<LeaderBoard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Expanded(
-        child: ListView.builder(
+    return WillPopScope(
+      onWillPop: (){
+        Navigator.pushNamed(context, '/wormhole');
+        Future.delayed(const Duration(seconds: 4), () {
+          setState(() {
+          Navigator.pop(context);
+          Navigator.pop(context);
+          });
+        });
+      },
+      child: Container(
+        child: Expanded(
+          child: ListView.builder(
             itemCount: 3,
             itemBuilder: (context, index) {
               return Elevation95(
@@ -102,7 +112,9 @@ class _LeaderBoardState extends State<LeaderBoard> {
                   ),
                 ),
               );
-            }),
+            }
+          ),
+        ),
       ),
     );
   }

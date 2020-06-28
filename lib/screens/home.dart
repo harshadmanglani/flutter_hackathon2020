@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
+import 'dart:async';
+import 'package:time_machine/screens/retro.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -42,13 +44,13 @@ class _HomeState extends State<Home> {
                   color: Colors.blue,
                   shape: buttonShape,
                   onPressed: () {
-                    // Navigator.pushNamed(context, '/wormhole');
-                    // Future.delayed(const Duration(seconds: 4), () {
-                    //   setState(() {
+                    Navigator.pushNamed(context, '/wormhole');
+                    Future.delayed(const Duration(seconds: 4), () {
+                      setState(() {
                     currentValue = 20.0;
                     Navigator.pushReplacementNamed(context, '/past');
-                    // });
-                    // });
+                    });
+                    });
                   },
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(25.0, 3.0, 25.0, 3.0),

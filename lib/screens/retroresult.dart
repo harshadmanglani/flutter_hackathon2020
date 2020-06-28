@@ -28,7 +28,7 @@ class _RetroResultState extends State<RetroResult> {
           SizedBox(height: 10.0),
           FlatButton(
               onPressed: () {
-                Navigator.pushReplacementNamed(context, '/past');
+                Navigator.pop(context);//pushReplacementNamed(context, '/past');
               },
               color: Colors.grey,
               child: Text("Continue"))
