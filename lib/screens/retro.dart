@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter95/flutter95.dart';
+import 'package:time_machine/backend/question.dart';
+import 'package:time_machine/models/question_model.dart';
 
 //categories of the retro quizzes
 int toolBar = 1;
@@ -112,9 +114,10 @@ class RetroTech extends StatefulWidget {
 }
 
 class _RetroTechState extends State<RetroTech> {
+  List<Question> questionList = [Question(), Question()];
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return QuizPage(questionList);
   }
 }
 

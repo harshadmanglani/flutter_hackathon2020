@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
-import 'package:flutter/services.dart';
-import 'dart:io' show Platform;
 
 class Home extends StatefulWidget {
   @override
@@ -13,111 +11,104 @@ class _HomeState extends State<Home> {
   dynamic buttonShape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(18.0),
       side: BorderSide(color: Colors.white));
-
-  var _androidAppRetain = MethodChannel("android_app_retain");
-
-  @override
-  void initState() {
-    super.initState();
-    if (Platform.isAndroid) {
-      _androidAppRetain.invokeMethod("wasActivityKilled").then((result) {
-        if (result) {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return;
-              });
-        }
-      });
-    }
-  }
-
+  double currentValue = 21.0;
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        if (Platform.isAndroid) {
-          if (Navigator.of(context).canPop()) {
-            print("1");
-            return Future.value(true);
-          } else {
-            _androidAppRetain.invokeMethod("sendToBackground");
-            print("2");
-            return Future.value(false);
-          }
-        } else {
-          print("3");
-          return Future.value(true);
-        }
-      },
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          title: Center(
-              child: Text("Time Machine",
-                  style: GoogleFonts.orbitron(
-                      textStyle: TextStyle(fontSize: 30.0)))),
-        ),
-        body: Container(
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 30.0),
-                Padding(
-                  padding: const EdgeInsets.all(13.0),
-                  child: Text(
-                      "Feel like meeting Steve Jobs or visiting a Mars colony?",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.0)),
-                ),
-                SizedBox(height: 30.0),
-                RaisedButton(
-                    color: Colors.blue,
-                    shape: buttonShape,
-                    onPressed: () {
-                      // Navigator.pushNamed(context, '/wormhole');
-                      // Future.delayed(const Duration(seconds: 4), () {
-                      //   setState(() {
-                      Navigator.pushReplacementNamed(context, '/past');
-                      // });
-                      // });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(25.0, 3.0, 25.0, 3.0),
-                      child: Text("Past",
-                          style: GoogleFonts.ibmPlexMono(
-                              textStyle: TextStyle(fontSize: 30.0))),
-                    )),
-                SizedBox(height: 30.0),
-                RaisedButton(
-                    color: Colors.red,
-                    shape: buttonShape,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/wormhole');
-                      Future.delayed(const Duration(seconds: 4), () {
-                        setState(() {
-                          Navigator.pushReplacementNamed(context, '/future');
-                        });
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: Center(
+            child: Text("Time Machine",
+                style: GoogleFonts.orbitron(
+                    textStyle: TextStyle(fontSize: 30.0)))),
+      ),
+      body: Container(
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              SizedBox(height: 30.0),
+              Padding(
+                padding: const EdgeInsets.all(13.0),
+                child: Text(
+                    "Feel like meeting Steve Jobs or visiting a Mars colony?",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0)),
+              ),
+              SizedBox(height: 20.0),
+              RaisedButton(
+                  color: Colors.blue,
+                  shape: buttonShape,
+                  onPressed: () {
+                    // Navigator.pushNamed(context, '/wormhole');
+                    // Future.delayed(const Duration(seconds: 4), () {
+                    //   setState(() {
+                    currentValue = 20.0;
+                    Navigator.pushReplacementNamed(context, '/past');
+                    // });
+                    // });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(25.0, 3.0, 25.0, 3.0),
+                    child: Text("Past",
+                        style: GoogleFonts.ibmPlexMono(
+                            textStyle: TextStyle(fontSize: 30.0))),
+                  )),
+              SizedBox(height: 30.0),
+              RaisedButton(
+                  color: Colors.red,
+                  shape: buttonShape,
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/wormhole');
+                    Future.delayed(const Duration(seconds: 4), () {
+                      setState(() {
+                        Navigator.pushReplacementNamed(context, '/future');
                       });
-                    },
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                      child: Text("Future",
-                          style: GoogleFonts.cinzel(
-                              textStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 24.0,
-                                  fontWeight: FontWeight.bold))),
-                    )),
-                // HoppingTimeMachine(
-                //   imagePath: 'assets/time_machine.jpg',
-                // )
-              ],
-            ),
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                    child: Text("Future",
+                        style: GoogleFonts.cinzel(
+                            textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold))),
+                  )),
+              SizedBox(height: 100),
+              HoppingTimeMachine(
+                imagePath: 'assets/time_machine.jpg',
+              ),
+              // Slider(
+              //   value: currentValue,
+              //   activeColor: Colors.white,
+              //   inactiveColor: Colors.white,
+              //   min: 20,
+              //   max: 22,
+              //   divisions: 2,
+              //   onChanged: (val) => setState(() {
+              //     currentValue = val;
+              //     print(val);
+              //     if (currentValue == 20) {
+              //       Future.delayed(const Duration(seconds: 1), () {
+              //         setState(() {
+              //           currentValue = 20.0;
+              //           Navigator.pushNamed(context, '/past');
+              //         });
+              //       });
+              //     } else if (currentValue == 22) {
+              //       Future.delayed(const Duration(seconds: 1), () {
+              //         setState(() {
+              //           currentValue = 20.0;
+              //           Navigator.pushNamed(context, '/future');
+              //         });
+              //       });
+              //     } else {}
+              //   }),
+              // )
+            ],
           ),
         ),
       ),
@@ -154,7 +145,7 @@ class _HoppingTimeMachineState extends State<HoppingTimeMachine>
     _curve = CurvedAnimation(
         parent: _controller, curve: Interval(0.0, 1.0, curve: Curves.ease));
 
-    _animation = Tween(begin: -50.0, end: -150.0).animate(_curve);
+    _animation = Tween(begin: -50.0, end: -100.0).animate(_curve);
 
     _controller.addListener(() {
       setState(() {
@@ -169,14 +160,17 @@ class _HoppingTimeMachineState extends State<HoppingTimeMachine>
     return AnimatedBuilder(
         animation: _animation,
         builder: (context, snapshot) {
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
-            child: Transform.translate(
-                offset: Offset(0, y),
-                child: Image.asset('assets/time_machine.jpg',
-                    width: 250, height: 200)),
-          );
+          return Transform.translate(
+              offset: Offset(0, y),
+              child: Image.asset('assets/time_machine.jpg',
+                  width: 250, height: 200));
         });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
 
