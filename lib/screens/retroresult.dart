@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter95/flutter95.dart';
 
 class RetroResult extends StatefulWidget {
   final int score;
@@ -18,22 +19,28 @@ class _RetroResultState extends State<RetroResult> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("REsult"),
-      ),
-      body: Column(
-        children: <Widget>[
-          Text("Your score is : $score"),
-          SizedBox(height: 10.0),
-          FlatButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/past');
-              },
-              color: Colors.grey,
-              child: Text("Continue"))
-        ],
+    return Scaffold95(
+      title: "Result",
+      body: Expanded(
+        child: Column(
+          children: <Widget>[
+            Text(
+              "Your score is : $score",
+              style: Flutter95.textStyle,
+            ),
+            SizedBox(height: 10.0),
+            FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                color: Colors.grey,
+                child: Elevation95(
+                    child: Text("Continue", style: Flutter95.textStyle)))
+          ],
+        ),
       ),
     );
   }
 }
+
+// enter your score in the leaderboard

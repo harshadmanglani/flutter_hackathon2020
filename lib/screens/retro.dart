@@ -114,7 +114,12 @@ class RetroTech extends StatefulWidget {
 }
 
 class _RetroTechState extends State<RetroTech> {
-  List<Question> questionList = [Question(), Question()];
+  List<Question> questionList = [
+    Question(
+        options: {"a": "a", "b": "b", "c": "c", "d": "d"},
+        question: "Hello",
+        correctAnswer: "d")
+  ];
   @override
   Widget build(BuildContext context) {
     return QuizPage(questionList);
