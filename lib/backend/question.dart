@@ -6,8 +6,8 @@ import 'package:time_machine/models/question_model.dart';
 import 'package:time_machine/screens/retroresult.dart';
 
 class QuizPage extends StatefulWidget {
-  final List<Question> myquestion;
-  QuizPage(this.myquestion);
+  final List<Question> questionList;
+  QuizPage(this.questionList);
   @override
   _QuizPageState createState() => _QuizPageState();
 }
@@ -16,23 +16,28 @@ class _QuizPageState extends State<QuizPage> {
   Color colorToShow = Colors.black;
   Color rightAnswer = Colors.green;
   Color wrongAnswer = Colors.red;
+  List<Question> questionList;
   ApiProvider obj;
   int score = 0;
   int i = 0;
-  int timer = 120;
-  String showtimer = '120';
+  int timer = 31;
+  String showtimer = '10';
+  BuildContext originalContext;
+  bool cancelTimer;
 
   Map<String, Color> btncolor;
 
   @override
   void initState() {
+    questionList = widget.questionList;
     btncolor = {
       "a": colorToShow,
       "b": colorToShow,
       "c": colorToShow,
       "d": colorToShow
     };
-    // startTimer();
+    cancelTimer = false;
+    startTimer();
     super.initState();
   }
 
@@ -40,10 +45,18 @@ class _QuizPageState extends State<QuizPage> {
     const onesec = Duration(seconds: 1);
     Timer.periodic(onesec, (Timer t) {
       setState(() {
-        if (timer < 1) {
+        if (timer == 0) {
           t.cancel();
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => RetroResult(score: score)));
+          dialogBox95(
+              titleText: "Time ran out on you",
+              contentText: "But don't worry, we won't ;)",
+              onPressed: () => () {
+                    Navigator.pop(context);
+                    nextQuestion();
+                  },
+              context: originalContext);
+        } else if (cancelTimer) {
+          t.cancel();
         } else {
           timer -= 1;
         }
@@ -53,44 +66,69 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void nextQuestion() {
+    cancelTimer = false;
     setState(() {
-      if (i < 1) {
-        i++;
-      } else {
+      if (i == questionList.length - 1) {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => RetroResult(score: score)));
+      } else {
+        i++;
+        timer = 31;
       }
       btncolor['a'] = colorToShow;
       btncolor['b'] = colorToShow;
       btncolor['c'] = colorToShow;
       btncolor['d'] = colorToShow;
     });
+    startTimer();
   }
 
-  void checkAnswer(String ans) {
-    if (widget.myquestion[i].correctAnswer ==
-        widget.myquestion[i].options[ans]) {
-      score += 10;
-      print(score);
-      colorToShow = rightAnswer;
-    } else {
-      colorToShow = wrongAnswer;
-    }
+  void checkAnswer(String answerKey) {
+    print(answerKey);
     setState(() {
-      btncolor[ans] = colorToShow;
+      cancelTimer = true;
+      if (questionList[i].correctAnswer == questionList[i].options[answerKey]) {
+        score += 10;
+        btncolor[answerKey] = rightAnswer;
+        Future.delayed(const Duration(milliseconds: 250), () {
+          dialogBox95(
+              titleText: "Correct Answer! :)",
+              contentText: "Head to the next question? ",
+              context: originalContext,
+              onPressed: () => () {
+                    Navigator.pop(context);
+                    nextQuestion();
+                  });
+        });
+      } else {
+        btncolor[answerKey] = wrongAnswer;
+        btncolor[correctAnswerKey(
+                questionList[i].correctAnswer, questionList[i].options)] =
+            rightAnswer;
+        Future.delayed(const Duration(milliseconds: 250), () {
+          dialogBox95(
+              titleText: "Wrong Answer :(",
+              contentText:
+                  "The correct answer is ${questionList[i].correctAnswer}",
+              context: originalContext,
+              onPressed: () => () {
+                    Navigator.pop(context);
+                    nextQuestion();
+                  });
+        });
+      }
     });
-    Timer(Duration(seconds: 1), nextQuestion);
   }
 
-  Widget choiceButton(String option, String key) {
+  Widget choiceButton(String option, String answerKey) {
     return Button95(
-      onTap: () => checkAnswer(key),
+      onTap: () => checkAnswer(answerKey),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Text(
             option,
-            style: TextStyle(color: btncolor[key]),
+            style: TextStyle(color: btncolor[answerKey]),
           ),
         ],
       ),
@@ -99,26 +137,19 @@ class _QuizPageState extends State<QuizPage> {
 
   @override
   Widget build(BuildContext context) {
+    originalContext = context;
     return WillPopScope(
       onWillPop: () {
-        return showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text("Timed Quiz"),
-                  content: Text(
-                    "You cannot go back! :(",
-                    style: Flutter95.textStyle,
-                  ),
-                  actions: <Widget>[
-                    FlatButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Elevation95(
-                          child: Text('Ok', style: Flutter95.textStyle)),
-                    )
-                  ],
-                ));
+        if (i != 0)
+          dialogBox95(
+              titleText: "Timed Quiz!",
+              contentText: "You cannot go to the previous question :(",
+              context: context,
+              onPressed: () => () {
+                    Navigator.pop(context);
+                  });
+        else
+          Navigator.pop(context);
       },
       child: Scaffold95(
         title: "Tech Quiz",
@@ -131,7 +162,7 @@ class _QuizPageState extends State<QuizPage> {
                   padding: EdgeInsets.all(15.0),
                   alignment: Alignment.bottomCenter,
                   child: Text(
-                    widget.myquestion[i].question,
+                    questionList[i].question,
                     style: Flutter95.textStyle,
                   ),
                 ),
@@ -142,10 +173,10 @@ class _QuizPageState extends State<QuizPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        choiceButton(widget.myquestion[i].options['a'], 'a'),
-                        choiceButton(widget.myquestion[i].options['b'], 'b'),
-                        choiceButton(widget.myquestion[i].options['c'], 'c'),
-                        choiceButton(widget.myquestion[i].options['d'], 'd'),
+                        choiceButton(questionList[i].options['a'], 'a'),
+                        choiceButton(questionList[i].options['b'], 'b'),
+                        choiceButton(questionList[i].options['c'], 'c'),
+                        choiceButton(questionList[i].options['d'], 'd'),
                       ],
                     ),
                   )),
@@ -156,6 +187,7 @@ class _QuizPageState extends State<QuizPage> {
                     child: Center(
                       child: Text(
                         showtimer,
+                        style: Flutter95.textStyle,
                       ),
                     ),
                   )),
@@ -164,5 +196,47 @@ class _QuizPageState extends State<QuizPage> {
         ),
       ),
     );
+  }
+
+  dialogBox95(
+      {BuildContext context,
+      String titleText,
+      Function onPressed,
+      String contentText}) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(titleText, style: Flutter95.textStyle),
+              content: Text(
+                contentText,
+                style: Flutter95.textStyle,
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: onPressed(),
+                  child: Elevation95(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
+                      child: Text('Continue', style: Flutter95.textStyle),
+                    ),
+                  ),
+                )
+              ],
+            ));
+  }
+
+  correctAnswerKey(String correctAnswer, Map<String, String> options) {
+    if (options["a"] == correctAnswer) {
+      return "a";
+    }
+    if (options["b"] == correctAnswer) {
+      return "b";
+    }
+    if (options["c"] == correctAnswer) {
+      return "c";
+    }
+    if (options["d"] == correctAnswer) {
+      return "d";
+    }
   }
 }

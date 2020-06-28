@@ -10,12 +10,22 @@ class ApiProvider {
   Map<dynamic, dynamic> parsedResponse;
 
   Future<void> getAllQuestions(int id) async {
+    questionList = [];
     try {
-      Response response = await post(baseUrl,
-          body: {"query": "{ questionsModel{ question, options, answer} }"});
+      Response response;
+      if (id == 1)
+        response = await post(baseUrl, body: {
+          "query":
+              '{ questionsModel(search:"Tech"){ question, options, answer} }'
+        });
+      else if (id == 2)
+        response = await post(baseUrl, body: {
+          "query":
+              '{ questionsModel(search:"Cars"){ question, options, answer} }'
+        });
       // print(response.body);
       // responseFromApi = json.encode(response.body);
-      print(response.body);
+      // print(response.body);
       responseFromApi = response.body.replaceAll(r'\', '');
       responseFromApi = responseFromApi.replaceAll(r'ions":"{', 'ions":{');
       responseFromApi = responseFromApi.replaceAll(r'}","ans', '},"ans');
@@ -33,24 +43,10 @@ class ApiProvider {
               "d": unparsedResponse[i]["options"]["d"]
             }));
       }
+
+      return questionList;
     } catch (error) {
       print("error: $error");
     }
-  }
-
-  getTechQuestionList() {
-    getAllQuestions(1);
-    return questionList;
-  }
-
-  getCarQuestionList() async {
-    await getAllQuestions(1);
-    for (int i = 0; i < unparsedResponse.length; i++) {
-      questionList.add(Question(
-          correctAnswer: unparsedResponse[i]["answer"],
-          question: unparsedResponse[i]["question"],
-          options: unparsedResponse[i]["options"]));
-    }
-    return questionList;
   }
 }

@@ -25,12 +25,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   normalAnimation() {
     _controller = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 1000));
+        vsync: this, duration: Duration(milliseconds: 1500));
 
     _curve = CurvedAnimation(
         parent: _controller, curve: Interval(0.0, 1.0, curve: Curves.ease));
 
-    _animation = Tween(begin: -50.0, end: -100.0).animate(_curve);
+    _animation = Tween(begin: -50.0, end: -150.0).animate(_curve);
 
     _controller.addListener(() {
       setState(() {
@@ -80,13 +80,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: Center(
-            child: Text("Time Machine",
-                style: GoogleFonts.orbitron(
-                    textStyle: TextStyle(fontSize: 30.0)))),
-      ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -97,9 +90,20 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         child: Center(
           child: Column(
             children: <Widget>[
+              // SizedBox(height: 40.0),
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: Center(
+                      child: Text("Time Machine",
+                          style: GoogleFonts.orbitron(
+                              textStyle: TextStyle(
+                                  fontSize: 30.0, color: Colors.white)))),
+                ),
+              ),
               SizedBox(height: 20.0),
               RaisedButton(
-                  color: Colors.purple[400],
+                  color: Colors.transparent,
                   shape: buttonShape,
                   onPressed: () {
                     playPastAnimation();
@@ -108,7 +112,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         Navigator.pushNamed(context, '/wormhole');
                       });
                     });
-                    Future.delayed(const Duration(seconds: 4), () {
+                    Future.delayed(const Duration(seconds: 6), () {
                       setState(() {
                         Navigator.pushReplacementNamed(context, '/past');
                         resetAnimation();
@@ -126,7 +130,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   )),
               SizedBox(height: 30.0),
               RaisedButton(
-                  color: Colors.purple[400],
+                  color: Colors.transparent,
                   shape: buttonShape,
                   onPressed: () {
                     playFutureAnimation();
@@ -135,7 +139,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         Navigator.pushNamed(context, '/wormhole');
                       });
                     });
-                    Future.delayed(const Duration(seconds: 4), () {
+                    Future.delayed(const Duration(seconds: 6), () {
                       setState(() {
                         Navigator.pushReplacementNamed(context, '/future');
                         resetAnimation();
@@ -151,7 +155,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                 fontSize: 24.0,
                                 fontWeight: FontWeight.bold))),
                   )),
-              SizedBox(height: 140),
+              SizedBox(height: 170),
               hoppingTimeMachine(
                 imagePath: 'assets/time_machine.png',
               ),

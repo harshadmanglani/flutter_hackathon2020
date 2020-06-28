@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/home.dart';
 import 'screens/cyberpunkfuture.dart';
 import 'screens/retro.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(TimeMachine());
@@ -15,6 +16,8 @@ class TimeMachine extends StatefulWidget {
 class _TimeMachineState extends State<TimeMachine> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
     return MaterialApp(
       routes: {
         '/home': (BuildContext context) => Home(),
@@ -25,10 +28,6 @@ class _TimeMachineState extends State<TimeMachine> {
         '/retrotech': (BuildContext context) => RetroTech(),
         '/retrocars': (BuildContext context) => RetroCars(),
       },
-      theme: ThemeData(
-        appBarTheme:
-            AppBarTheme(color: Colors.black54, brightness: Brightness.dark),
-      ),
       home: Home(),
     );
   }

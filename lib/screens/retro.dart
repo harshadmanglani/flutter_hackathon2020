@@ -127,26 +127,28 @@ class RetroTech extends StatefulWidget {
 
 class _RetroTechState extends State<RetroTech> {
   ApiProvider obj;
-  List<Question> questionList = [];
+  List<Question> questionList;
 
   @override
   void initState() {
     super.initState();
+    questionList = [];
     obj = ApiProvider();
-    // questionList = obj.getTechQuestionList();
-    // fillQuestions();
-  }
-
-  Future fillQuestions() async {
-    // questionList = await obj.getTechQuestionList();
   }
 
   @override
   Widget build(BuildContext context) {
-    // return QuizPage(questionList);
-    // fillQuestions();
-    print(questionList);
-    return Container();
+    return FutureBuilder(
+      future: obj.getAllQuestions(1),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          print(snapshot.data.length);
+          return QuizPage(snapshot.data);
+        } else {
+          return Container(child: Center(child: CircularProgressIndicator()));
+        }
+      },
+    );
   }
 }
 
@@ -156,39 +158,28 @@ class RetroCars extends StatefulWidget {
 }
 
 class _RetroCarsState extends State<RetroCars> {
+  ApiProvider obj;
+  List<Question> questionList;
+
+  @override
+  void initState() {
+    super.initState();
+    questionList = [];
+    obj = ApiProvider();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return FutureBuilder(
+      future: obj.getAllQuestions(2),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          print(snapshot.data.length);
+          return QuizPage(snapshot.data);
+        } else {
+          return Container(child: Center(child: CircularProgressIndicator()));
+        }
+      },
+    );
   }
 }
-
-// expired code
-
-// Container(
-//   child: Column(
-//     children: <Widget>[
-//       CustomButton(
-//         fontSizeForText: 20.0,
-//         routeName: '/leaderboard',
-//         text: 'LEADERBOARD',
-//         originalContext: context,
-//       ),
-
-// ExpansionTile(
-//     initiallyExpanded: true,
-//     title: Row(
-//       mainAxisSize: MainAxisSize.max,
-//       children: <Widget>[
-//         new Expanded(child: Text('QUIZZES', style: retroFont)),
-//       ],
-//     ),
-//     children: <Widget>[
-//       CustomButton(
-//         routeName: '/retrotech',
-//         text: 'Tech',
-//         originalContext: context,
-// )
-// ]),
-// ],
-// ),
-// ),
