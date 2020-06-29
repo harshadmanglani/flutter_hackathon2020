@@ -11,10 +11,10 @@ An interactive experience that would take you to a cyberpunk future.
 Microsoft Azure, Django-GraphQL API, Flutter
 
 ## Screenshots
-<p float="left">
+
   ![alt text](https://github.com/harshadmanglani/flutter_hackathon2020/raw/master/assets/Screenshot%20(244).png)
   ![alt text](https://github.com/harshadmanglani/flutter_hackathon2020/raw/master/assets/Screenshot%20(245).png)
-</p>
+
 
 ## Getting Started
 
