@@ -19,16 +19,16 @@ class ApiProvider {
       if (id == 1)
         response = await post(baseUrl, body: {
           "query":
-              '{ questionsModel(search:"Tech"){ question, options, answer} }'
+              '{ questionsModel(search:"Tech"){ question, options, answer, photolink} }'
         });
       else if (id == 2)
         response = await post(baseUrl, body: {
           "query":
-              '{ questionsModel(search:"Cars"){ question, options, answer} }'
+              '{ questionsModel(search:"Cars"){ question, options, answer, photolink} }'
         });
       // print(response.body);
       // responseFromApi = json.encode(response.body);
-      // print(response.body);
+      print(response.body);
       responseFromApi = response.body.replaceAll(r'\', '');
       responseFromApi = responseFromApi.replaceAll(r'ions":"{', 'ions":{');
       responseFromApi = responseFromApi.replaceAll(r'}","ans', '},"ans');
@@ -44,7 +44,8 @@ class ApiProvider {
               "b": unparsedResponse[i]["options"]["b"],
               "c": unparsedResponse[i]["options"]["c"],
               "d": unparsedResponse[i]["options"]["d"]
-            }));
+            },
+            photoUrl: unparsedResponse[i]["photolink"]));
       }
 
       return questionList;

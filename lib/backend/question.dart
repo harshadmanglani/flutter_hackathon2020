@@ -181,9 +181,16 @@ class _QuizPageState extends State<QuizPage> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 200,
-              ),
+              questionList[i].photoUrl != null
+                  ? Container(
+                      height: 200,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: NetworkImage("questionList[i].photoUrl"),
+                              fit: BoxFit.cover)))
+                  : SizedBox(
+                      height: 200,
+                    ),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

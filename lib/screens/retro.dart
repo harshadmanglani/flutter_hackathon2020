@@ -136,82 +136,95 @@ class _LeaderBoardState extends State<LeaderBoard> {
         child: FutureBuilder(
             future: obj.getDataFromLeaderBoard(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 35,
-                    ),
-                    Elevation95(
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 5,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
+              print(snapshot.connectionState);
+              try {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 35,
+                      ),
+                      Elevation95(
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 5,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  'USERNAME',
+                                  style: Flutter95.textStyle,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 4,
                               child: Text(
-                                'USERNAME',
+                                'SCORE',
                                 style: Flutter95.textStyle,
                               ),
                             ),
-                          ),
-                          Expanded(
-                            flex: 4,
-                            child: Text(
-                              'SCORE',
-                              style: Flutter95.textStyle,
+                            Expanded(
+                              flex: 4,
+                              child: Text(
+                                'CATEGORY',
+                                style: Flutter95.textStyle,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            flex: 4,
-                            child: Text(
-                              'CATEGORY',
-                              style: Flutter95.textStyle,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, index) {
-                            return Elevation95(
-                                child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 5,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
+                      Expanded(
+                        child: ListView.builder(
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, index) {
+                              return Elevation95(
+                                  child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 5,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Text(
+                                        '${snapshot.data[index].userName}',
+                                        style: Flutter95.textStyle,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 4,
                                     child: Text(
-                                      '${snapshot.data[index].userName}',
+                                      '${snapshot.data[index].score}',
                                       style: Flutter95.textStyle,
                                     ),
                                   ),
-                                ),
-                                Expanded(
-                                  flex: 4,
-                                  child: Text(
-                                    '${snapshot.data[index].score}',
-                                    style: Flutter95.textStyle,
+                                  Expanded(
+                                    flex: 4,
+                                    child: Text(
+                                      snapshot.data[index].category == "Cars" ||
+                                              snapshot.data[index].category ==
+                                                  "Tech"
+                                          ? '${snapshot.data[index].category}'
+                                          : "",
+                                      style: Flutter95.textStyle,
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  flex: 4,
-                                  child: Text(
-                                    '${snapshot.data[index].category}',
-                                    style: Flutter95.textStyle,
-                                  ),
-                                ),
-                              ],
-                            ));
-                          }),
-                    ),
-                  ],
-                );
-              } else {
+                                ],
+                              ));
+                            }),
+                      ),
+                    ],
+                  );
+                } else {
+                  return Container(
+                      child: Center(child: CircularProgressIndicator()));
+                }
+              } catch (error) {
                 return Container(
-                    child: Center(child: CircularProgressIndicator()));
+                    height: 200,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage(""), fit: BoxFit.cover)));
               }
             }),
       ),
