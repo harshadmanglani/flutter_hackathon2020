@@ -8,7 +8,7 @@ class OneA extends StatefulWidget {
 }
 
 class _OneAState extends State<OneA> with SingleTickerProviderStateMixin {
-  static const Duration _duration = Duration(milliseconds: 3500);
+  static const Duration _duration = Duration(seconds: 10);
   static String story;
   AnimationController controller;
   Animation<String> animation;
@@ -45,6 +45,11 @@ When the car stops, you peek out of the window and see a warehouse. You grab you
       controller.forward();
       setState(() {});
     }
+  }
+
+  Future<bool> getFlag() async {
+    await Future.delayed(Duration(seconds: 10));
+    return animation.isCompleted;
   }
 
   @override
@@ -93,6 +98,7 @@ When the car stops, you peek out of the window and see a warehouse. You grab you
                         animation: animation,
                         builder: (context, child) {
                           return Text('${animation.value}',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 20,
                                   fontFamily: 'SpecialElite',
@@ -102,33 +108,44 @@ When the car stops, you peek out of the window and see a warehouse. You grab you
                     ),
                   ),
                 ),
-                ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: options.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(30.0, 8.0, 30.0, 8.0),
-                          child: RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.white)),
-                            color: Colors.transparent,
-                            onPressed: () {
-                              takeMeAhead(index);
-                            },
-                            child: Text(options[index],
-                                style: GoogleFonts.merriweather(
-                                    textStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.normal))),
-                          ),
-                        ),
-                      );
-                    }),
+                FutureBuilder<bool>(
+                    future: getFlag(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: options.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      30.0, 8.0, 30.0, 8.0),
+                                  child: RaisedButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18.0),
+                                        side: BorderSide(color: Colors.white)),
+                                    color: Colors.transparent,
+                                    onPressed: () {
+                                      takeMeAhead(index);
+                                    },
+                                    child: Text(options[index],
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.merriweather(
+                                            textStyle: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20.0,
+                                                fontWeight:
+                                                    FontWeight.normal))),
+                                  ),
+                                ),
+                              );
+                            });
+                      } else {
+                        return Container();
+                      }
+                    })
               ],
             ),
           ))),

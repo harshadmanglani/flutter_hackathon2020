@@ -8,7 +8,7 @@ class OneABA extends StatefulWidget {
 }
 
 class _OneABAState extends State<OneABA> with SingleTickerProviderStateMixin {
-  static const Duration _duration = Duration(milliseconds: 3500);
+  static const Duration _duration = Duration(seconds: 7);
   static String story;
   AnimationController controller;
   Animation<String> animation;
@@ -43,6 +43,11 @@ class _OneABAState extends State<OneABA> with SingleTickerProviderStateMixin {
     }
   }
 
+  Future<bool> getFlag() async {
+    await Future.delayed(Duration(seconds: 7));
+    return animation.isCompleted;
+  }
+
   @override
   Widget build(BuildContext context) {
     // reset();
@@ -74,6 +79,7 @@ class _OneABAState extends State<OneABA> with SingleTickerProviderStateMixin {
           decoration: futureDecoration,
           child: SafeArea(
               child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -88,6 +94,7 @@ class _OneABAState extends State<OneABA> with SingleTickerProviderStateMixin {
                         animation: animation,
                         builder: (context, child) {
                           return Text('${animation.value}',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 20,
                                   fontFamily: 'SpecialElite',
@@ -97,33 +104,44 @@ class _OneABAState extends State<OneABA> with SingleTickerProviderStateMixin {
                     ),
                   ),
                 ),
-                ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: options.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(30.0, 8.0, 30.0, 8.0),
-                          child: RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.white)),
-                            color: Colors.transparent,
-                            onPressed: () {
-                              takeMeAhead(index);
-                            },
-                            child: Text(options[index],
-                                style: GoogleFonts.merriweather(
-                                    textStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.normal))),
-                          ),
-                        ),
-                      );
-                    }),
+                FutureBuilder<bool>(
+                    future: getFlag(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: options.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      30.0, 8.0, 30.0, 8.0),
+                                  child: RaisedButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18.0),
+                                        side: BorderSide(color: Colors.white)),
+                                    color: Colors.transparent,
+                                    onPressed: () {
+                                      takeMeAhead(index);
+                                    },
+                                    child: Text(options[index],
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.merriweather(
+                                            textStyle: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20.0,
+                                                fontWeight:
+                                                    FontWeight.normal))),
+                                  ),
+                                ),
+                              );
+                            });
+                      } else {
+                        return Container();
+                      }
+                    })
               ],
             ),
           ))),

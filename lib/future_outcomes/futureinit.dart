@@ -9,7 +9,7 @@ class FutureInit extends StatefulWidget {
 
 class _FutureInitState extends State<FutureInit>
     with SingleTickerProviderStateMixin {
-  static const Duration _duration = Duration(milliseconds: 9500);
+  static const Duration _duration = Duration(seconds: 18);
   static String story;
   AnimationController controller;
   Animation<String> animation;
@@ -48,6 +48,11 @@ As your eyes regain focus, you straighten up and pick up the call. It’s your p
     }
   }
 
+  Future<bool> getFlag() async {
+    await Future.delayed(Duration(seconds: 18));
+    return animation.isCompleted;
+  }
+
   @override
   Widget build(BuildContext context) {
     // reset();
@@ -70,6 +75,7 @@ As your eyes regain focus, you straighten up and pick up the call. It’s your p
                       animation: animation,
                       builder: (context, child) {
                         return Text('${animation.value}',
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 20,
                                 fontFamily: 'SpecialElite',
@@ -79,33 +85,42 @@ As your eyes regain focus, you straighten up and pick up the call. It’s your p
                   ),
                 ),
               ),
-              ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: options.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(30.0, 8.0, 30.0, 8.0),
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.white)),
-                          color: Colors.transparent,
-                          onPressed: () {
-                            takeMeAhead(index);
-                          },
-                          child: Text(options[index],
-                              style: GoogleFonts.merriweather(
-                                  textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.normal))),
-                        ),
-                      ),
-                    );
-                  }),
+              FutureBuilder<bool>(
+                  future: getFlag(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: options.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    30.0, 8.0, 30.0, 8.0),
+                                child: RaisedButton(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.white)),
+                                  color: Colors.transparent,
+                                  onPressed: () {
+                                    takeMeAhead(index);
+                                  },
+                                  child: Text(options[index],
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.merriweather(
+                                          textStyle: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.normal))),
+                                ),
+                              ),
+                            );
+                          });
+                    } else {
+                      return Container();
+                    }
+                  })
             ],
           ),
         )));

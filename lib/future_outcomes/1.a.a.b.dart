@@ -8,7 +8,7 @@ class OneAAB extends StatefulWidget {
 }
 
 class _OneAABState extends State<OneAAB> with SingleTickerProviderStateMixin {
-  static const Duration _duration = Duration(milliseconds: 3500);
+  static const Duration _duration = Duration(seconds: 16);
   static String story;
   AnimationController controller;
   Animation<String> animation;
@@ -44,6 +44,11 @@ You look at the backup, taking notice of everyone surrounding the place. More th
       controller.forward();
       setState(() {});
     }
+  }
+
+  Future<bool> getFlag() async {
+    await Future.delayed(Duration(seconds: 16));
+    return animation.isCompleted;
   }
 
   @override
@@ -92,6 +97,7 @@ You look at the backup, taking notice of everyone surrounding the place. More th
                         animation: animation,
                         builder: (context, child) {
                           return Text('${animation.value}',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 20,
                                   fontFamily: 'SpecialElite',
@@ -101,33 +107,44 @@ You look at the backup, taking notice of everyone surrounding the place. More th
                     ),
                   ),
                 ),
-                ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: options.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(30.0, 8.0, 30.0, 8.0),
-                          child: RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.white)),
-                            color: Colors.transparent,
-                            onPressed: () {
-                              takeMeAhead(index);
-                            },
-                            child: Text(options[index],
-                                style: GoogleFonts.merriweather(
-                                    textStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.normal))),
-                          ),
-                        ),
-                      );
-                    }),
+                FutureBuilder<bool>(
+                    future: getFlag(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: options.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      30.0, 8.0, 30.0, 8.0),
+                                  child: RaisedButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18.0),
+                                        side: BorderSide(color: Colors.white)),
+                                    color: Colors.transparent,
+                                    onPressed: () {
+                                      takeMeAhead(index);
+                                    },
+                                    child: Text(options[index],
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.merriweather(
+                                            textStyle: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20.0,
+                                                fontWeight:
+                                                    FontWeight.normal))),
+                                  ),
+                                ),
+                              );
+                            });
+                      } else {
+                        return Container();
+                      }
+                    })
               ],
             ),
           ))),
