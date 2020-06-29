@@ -74,8 +74,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   dynamic buttonShape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(18.0),
-      side: BorderSide(color: Colors.white));
+      borderRadius: BorderRadius.circular(20.0),
+      side: BorderSide(color: Colors.white30));
 
   @override
   Widget build(BuildContext context) {
@@ -183,6 +183,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       _controller.stop();
       _right.stop();
       _animationValue = 1;
+      print(_animationValue);
       _left.forward();
     });
   }
@@ -192,6 +193,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       _controller.stop();
       _left.stop();
       _animationValue = 2;
+      print(_animationValue);
       _right.forward();
     });
   }

@@ -61,6 +61,7 @@ flutter:
     - assets/img7.jpg
     - assets/homeback2.jpg
     - assets/internet_error.png
+    - assets/futureback.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
