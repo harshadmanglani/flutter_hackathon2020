@@ -4,7 +4,6 @@ import 'package:flutter95/flutter95.dart';
 import 'package:time_machine/backend/apiprovider.dart';
 import 'package:time_machine/backend/question.dart';
 import 'package:time_machine/models/question_model.dart';
-import 'package:parallax_image/parallax_image.dart';
 
 //categories of the retro quizzes
 
@@ -224,7 +223,8 @@ class _LeaderBoardState extends State<LeaderBoard> {
                     height: 200,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: NetworkImage(""), fit: BoxFit.cover)));
+                      image: AssetImage("assets/internet_error.png"),
+                    )));
               }
             }),
       ),
@@ -257,17 +257,26 @@ class _RetroTechState extends State<RetroTech> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: obj.getAllQuestions(1),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          print(snapshot.data.length);
-          return QuizPage(snapshot.data, 1);
-        } else {
-          return Container(child: Center(child: CircularProgressIndicator()));
-        }
-      },
-    );
+    try {
+      return FutureBuilder(
+        future: obj.getAllQuestions(1),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return QuizPage(snapshot.data, 1);
+          } else {
+            return Container(child: Center(child: CircularProgressIndicator()));
+          }
+        },
+      );
+    } catch (error) {
+      return Container(
+          height: 100,
+          width: 100,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/internet_error.png"),
+                  fit: BoxFit.scaleDown)));
+    }
   }
 
   @override
@@ -296,17 +305,25 @@ class _RetroCarsState extends State<RetroCars> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: obj.getAllQuestions(2),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          print(snapshot.data.length);
-          return QuizPage(snapshot.data, 2);
-        } else {
-          return Container(child: Center(child: CircularProgressIndicator()));
-        }
-      },
-    );
+    try {
+      return FutureBuilder(
+        future: obj.getAllQuestions(2),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return QuizPage(snapshot.data, 2);
+          } else {
+            return Container(child: Center(child: CircularProgressIndicator()));
+          }
+        },
+      );
+    } catch (error) {
+      return Container(
+          height: 200,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/internet_error.png"),
+                  fit: BoxFit.scaleDown)));
+    }
   }
 
   @override

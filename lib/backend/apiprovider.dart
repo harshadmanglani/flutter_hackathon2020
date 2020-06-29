@@ -28,7 +28,7 @@ class ApiProvider {
         });
       // print(response.body);
       // responseFromApi = json.encode(response.body);
-      print(response.body);
+      // print(response.body);
       responseFromApi = response.body.replaceAll(r'\', '');
       responseFromApi = responseFromApi.replaceAll(r'ions":"{', 'ions":{');
       responseFromApi = responseFromApi.replaceAll(r'}","ans', '},"ans');
@@ -61,7 +61,7 @@ class ApiProvider {
         "query":
             'mutation{ createLeader(username:"$username", scorestr:"$score", category:"$category"){ id, score, username, category} }'
       });
-      print(response.body);
+      // print(response.body);
       responseFromApi = response.body.replaceAll(r'\', '');
       parsedResponse = json.decode(responseFromApi);
       return parsedResponse;

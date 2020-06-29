@@ -4,6 +4,8 @@ import 'package:time_machine/backend/apiprovider.dart';
 import 'dart:async';
 import 'package:time_machine/models/question_model.dart';
 import 'package:time_machine/screens/retroresult.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:flutter_blurhash/flutter_blurhash.dart';
 
 class QuizPage extends StatefulWidget {
   final List<Question> questionList;
@@ -21,17 +23,20 @@ class _QuizPageState extends State<QuizPage> {
   ApiProvider obj;
   int score = 0;
   int i = 0;
-  int timer = 30;
-  String showtimer = '30';
+  int timer = 60;
+  String showtimer = '60';
   BuildContext originalContext;
   bool cancelTimer;
   int id;
+  String url;
 
   Map<String, Color> btncolor;
 
   @override
   void initState() {
+    super.initState();
     questionList = widget.questionList;
+    print(questionList[0].photoUrl);
     id = widget.id;
     btncolor = {
       "a": colorToShow,
@@ -41,7 +46,6 @@ class _QuizPageState extends State<QuizPage> {
     };
     cancelTimer = false;
     startTimer();
-    super.initState();
   }
 
   @override
@@ -86,7 +90,7 @@ class _QuizPageState extends State<QuizPage> {
                 )));
       } else {
         i++;
-        timer = 30;
+        timer = 60;
       }
       btncolor['a'] = colorToShow;
       btncolor['b'] = colorToShow;
@@ -151,71 +155,96 @@ class _QuizPageState extends State<QuizPage> {
   @override
   Widget build(BuildContext context) {
     originalContext = context;
-    return WillPopScope(
-      onWillPop: () {
-        if (i != 0)
-          dialogBox95(
-              titleText: "Timed Quiz!",
-              contentText: "You cannot go to the previous question :(",
-              context: context,
-              onPressed: () => () {
-                    Navigator.pop(context);
-                  });
-        else
-          Navigator.pop(context);
-      },
-      child: Scaffold95(
-        title: id == 1 ? "Tech Quiz" : "Cars Quiz",
-        body: Expanded(
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 20.0,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Text(
-                    questionList[i].question,
-                    style: Flutter95.textStyle,
-                  ),
+    try {
+      return WillPopScope(
+        onWillPop: () {
+          if (i != 0)
+            dialogBox95(
+                titleText: "Timed Quiz!",
+                contentText: "You cannot go to the previous question :(",
+                context: context,
+                onPressed: () => () {
+                      Navigator.pop(context);
+                    });
+          else
+            Navigator.pop(context);
+        },
+        child: Scaffold95(
+          title: id == 1 ? "Tech Quiz" : "Cars Quiz",
+          body: Expanded(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 20.0,
                 ),
-              ),
-              questionList[i].photoUrl != null
-                  ? Container(
-                      height: 200,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: NetworkImage("questionList[i].photoUrl"),
-                              fit: BoxFit.cover)))
-                  : SizedBox(
-                      height: 200,
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(15.0),
+                    child: Text(
+                      questionList[i].question,
+                      style: Flutter95.textStyle,
                     ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    choiceButton(questionList[i].options['a'], 'a'),
-                    choiceButton(questionList[i].options['b'], 'b'),
-                    choiceButton(questionList[i].options['c'], 'c'),
-                    choiceButton(questionList[i].options['d'], 'd'),
-                  ],
-                ),
-              ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 18.0),
-                  child: Text(
-                    showtimer,
-                    style: Flutter95.textStyle,
                   ),
                 ),
-              ),
-            ],
+                // StreamBuilder<String>(
+                // stream: _urlStream,
+                // builder: (context, snapshot) {
+                // print(snapshot.data);
+                // if (snapshot.hasData) {
+                // return
+                questionList[i].photoUrl != null
+                    ? Container(
+                        height: 200,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: CachedNetworkImageProvider(
+                                    questionList[i].photoUrl),
+                                fit: BoxFit.cover)))
+                    : Container(
+                        child: Text("No image to display",
+                            style: Flutter95.textStyle),
+                      ), //;
+                // } else {
+                // print("hi");
+                // return Text("No image to display.");
+                // }
+                // }),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      choiceButton(questionList[i].options['a'], 'a'),
+                      choiceButton(questionList[i].options['b'], 'b'),
+                      choiceButton(questionList[i].options['c'], 'c'),
+                      choiceButton(questionList[i].options['d'], 'd'),
+                    ],
+                  ),
+                ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 18.0),
+                    child: Text(
+                      showtimer,
+                      style: Flutter95.textStyle,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } catch (error) {
+      setState(() {
+        cancelTimer = true;
+      });
+      return Container(
+          height: 200,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/internet_error.png"),
+                  fit: BoxFit.fitWidth)));
+    }
   }
 
   dialogBox95(
