@@ -17,8 +17,10 @@ class _OneABAState extends State<OneABA> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    story = "";
-    options = ["", ""];
+    story =
+        """Backup arrives along with Johnny. With substantial firepower on your side you could easily overpower the factions. As your team is getting ready, you see the captain go off to the side of the warehouse. You follow him and see him dealing with the Hyperion faction. You hear a bang and look around to see that Johnny has shot you. “ Why? Why would you do this? You took an oath to protect and serve the citizens”. “That’s exactly what we are doing. Sometimes to protect the law, you have to break it,” he replied. “I can still help you, if you decide to join our cause”. “There is a right way to protect the city,” you reply, “But it definitely isn’t like this.” You fall to your knees as you succumb to your wounds.
+    """;
+    options = ["Continue"];
     controller = AnimationController(vsync: this, duration: _duration);
     animation = TypewriterTween(end: story).animate(controller);
     controller.forward();
@@ -71,57 +73,59 @@ class _OneABAState extends State<OneABA> with SingleTickerProviderStateMixin {
       child: Container(
           decoration: futureDecoration,
           child: SafeArea(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Card(
-                  color: Colors.transparent,
-                  child: Container(
-                    padding: EdgeInsets.all(8.0),
-                    child: AnimatedBuilder(
-                      animation: animation,
-                      builder: (context, child) {
-                        return Text('${animation.value}',
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: 'SpecialElite',
-                                color: Colors.white));
-                      },
+              child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Card(
+                    color: Colors.transparent,
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      child: AnimatedBuilder(
+                        animation: animation,
+                        builder: (context, child) {
+                          return Text('${animation.value}',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontFamily: 'SpecialElite',
+                                  color: Colors.white));
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-              ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: options.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(30.0, 8.0, 30.0, 8.0),
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.white)),
-                          color: Colors.transparent,
-                          onPressed: () {
-                            takeMeAhead(index);
-                          },
-                          child: Text(options[index],
-                              style: GoogleFonts.merriweather(
-                                  textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.normal))),
+                ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: options.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(30.0, 8.0, 30.0, 8.0),
+                          child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: BorderSide(color: Colors.white)),
+                            color: Colors.transparent,
+                            onPressed: () {
+                              takeMeAhead(index);
+                            },
+                            child: Text(options[index],
+                                style: GoogleFonts.merriweather(
+                                    textStyle: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.normal))),
+                          ),
                         ),
-                      ),
-                    );
-                  }),
-            ],
+                      );
+                    }),
+              ],
+            ),
           ))),
     );
   }

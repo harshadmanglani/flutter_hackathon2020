@@ -17,7 +17,8 @@ class _WakeUpState extends State<WakeUp> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    story = "";
+    story =
+        "You open your eyes and see a clock, no, a countdown, with six hours remaining. Rubbing your eyes, you get up, stretch your arms and legs and go to your chair. The Flutter hackathon is in its final stretch and with work still remaining, you continue the coding.";
     options = ["Continue Hacking!"];
     controller = AnimationController(vsync: this, duration: _duration);
     animation = TypewriterTween(end: story).animate(controller);
@@ -71,57 +72,60 @@ class _WakeUpState extends State<WakeUp> with SingleTickerProviderStateMixin {
       child: Container(
           decoration: futureDecoration,
           child: SafeArea(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Card(
-                  color: Colors.transparent,
-                  child: Container(
-                    padding: EdgeInsets.all(8.0),
-                    child: AnimatedBuilder(
-                      animation: animation,
-                      builder: (context, child) {
-                        return Text('${animation.value}',
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: 'SpecialElite',
-                                color: Colors.white));
-                      },
+              child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Card(
+                    color: Colors.transparent,
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      child: AnimatedBuilder(
+                        animation: animation,
+                        builder: (context, child) {
+                          return Text('${animation.value}',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontFamily: 'SpecialElite',
+                                  color: Colors.white));
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-              ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: options.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(30.0, 8.0, 30.0, 8.0),
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.white)),
-                          color: Colors.transparent,
-                          onPressed: () {
-                            takeMeAhead(index);
-                          },
-                          child: Text(options[index],
-                              style: GoogleFonts.merriweather(
-                                  textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.normal))),
+                ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: options.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(30.0, 8.0, 30.0, 8.0),
+                          child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: BorderSide(color: Colors.white)),
+                            color: Colors.transparent,
+                            onPressed: () {
+                              takeMeAhead(index);
+                            },
+                            child: Text(options[index],
+                                style: GoogleFonts.merriweather(
+                                    textStyle: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.normal))),
+                          ),
                         ),
-                      ),
-                    );
-                  }),
-            ],
+                      );
+                    }),
+              ],
+            ),
           ))),
     );
   }

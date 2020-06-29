@@ -17,8 +17,14 @@ class _OneAState extends State<OneA> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    story = "";
-    options = ["", ""];
+    story = """
+    Limping, you reach your car. As you climb into your car, your blood stains the interiors. You put the coordinates into the GeoSatNav and wait, clutching your leg as your car glides through the city.
+When the car stops, you peek out of the window and see a warehouse. You grab your spare laser magnum and head towards the warehouse. You see the trade going on between the Children of the Vault and the Hyperion factions, the most destructive factions in this hemisphere. You overhear their conversation and find out that they are trading a prototype of a military assassin drone which was lost in a recent raid by the Children of the Vault.
+    """;
+    options = [
+      "Go in guns blazing",
+      "Scope out the warehouse and collect intel"
+    ];
     controller = AnimationController(vsync: this, duration: _duration);
     animation = TypewriterTween(end: story).animate(controller);
     controller.forward();
@@ -71,57 +77,60 @@ class _OneAState extends State<OneA> with SingleTickerProviderStateMixin {
       child: Container(
           decoration: futureDecoration,
           child: SafeArea(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Card(
-                  color: Colors.transparent,
-                  child: Container(
-                    padding: EdgeInsets.all(8.0),
-                    child: AnimatedBuilder(
-                      animation: animation,
-                      builder: (context, child) {
-                        return Text('${animation.value}',
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: 'SpecialElite',
-                                color: Colors.white));
-                      },
+              child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Card(
+                    color: Colors.transparent,
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      child: AnimatedBuilder(
+                        animation: animation,
+                        builder: (context, child) {
+                          return Text('${animation.value}',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontFamily: 'SpecialElite',
+                                  color: Colors.white));
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-              ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: options.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(30.0, 8.0, 30.0, 8.0),
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.white)),
-                          color: Colors.transparent,
-                          onPressed: () {
-                            takeMeAhead(index);
-                          },
-                          child: Text(options[index],
-                              style: GoogleFonts.merriweather(
-                                  textStyle: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.normal))),
+                ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: options.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(30.0, 8.0, 30.0, 8.0),
+                          child: RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                                side: BorderSide(color: Colors.white)),
+                            color: Colors.transparent,
+                            onPressed: () {
+                              takeMeAhead(index);
+                            },
+                            child: Text(options[index],
+                                style: GoogleFonts.merriweather(
+                                    textStyle: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.normal))),
+                          ),
                         ),
-                      ),
-                    );
-                  }),
-            ],
+                      );
+                    }),
+              ],
+            ),
           ))),
     );
   }

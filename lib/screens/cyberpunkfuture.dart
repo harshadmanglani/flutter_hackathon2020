@@ -3,7 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 var futureDecoration = BoxDecoration(
     image: DecorationImage(
-        image: AssetImage("assets/futureback.jpeg"), fit: BoxFit.cover));
+        colorFilter: new ColorFilter.mode(
+            Colors.black.withOpacity(0.42), BlendMode.dstATop),
+        image: AssetImage("assets/futureback.jpeg"),
+        fit: BoxFit.cover));
 
 class FutureHome extends StatefulWidget {
   @override
@@ -47,17 +50,18 @@ class _FutureHomeState extends State<FutureHome>
           });
         },
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.black87,
-            title: Text("The Future",
-                style: GoogleFonts.montserratSubrayada(
-                    textStyle: TextStyle(fontSize: 30.0))),
-          ),
           body: Container(
             decoration: futureDecoration,
             child: Center(
               child: Column(
                 children: <Widget>[
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text("The Future",
+                      style: GoogleFonts.montserratSubrayada(
+                          textStyle:
+                              TextStyle(fontSize: 35.0, color: Colors.white))),
                   SizedBox(height: 250),
                   FadeTransition(
                     child: FlatButton(
