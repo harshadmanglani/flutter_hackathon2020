@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:time_machine/screens/cyberpunkfuture.dart';
+import 'package:time_machine/future_outcomes/futurestory.dart';
 
 class FutureInit extends StatefulWidget {
   @override
   _FutureInitState createState() => _FutureInitState();
 }
 
-class _FutureInitState extends State<FutureInit>
-    with SingleTickerProviderStateMixin {
-  static const Duration _duration = Duration(seconds: 18);
+class _FutureInitState extends State<FutureInit> {
   static String story;
-  AnimationController controller;
-  Animation<String> animation;
   List<String> options;
 
   @override
@@ -26,122 +21,21 @@ As your eyes regain focus, you straighten up and pick up the call. It’s your p
 
     """;
     options = ["Go to drop", "Stay and wait for the medical team"];
-    controller = AnimationController(vsync: this, duration: _duration);
-    animation = TypewriterTween(end: story).animate(controller);
-    controller.forward();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  void reset() {
-    if (controller.status == AnimationStatus.completed) {
-      controller.forward().whenComplete(() {
-        setState(() {});
-      });
-    } else {
-      controller.forward();
-      setState(() {});
-    }
-  }
-
-  Future<bool> getFlag() async {
-    await Future.delayed(Duration(seconds: 18));
-    return animation.isCompleted;
   }
 
   @override
   Widget build(BuildContext context) {
-    // reset();
-    return Container(
-        decoration: futureDecoration,
-        child: SafeArea(
-            child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Card(
-                  color: Colors.transparent,
-                  child: Container(
-                    padding: EdgeInsets.all(8.0),
-                    child: AnimatedBuilder(
-                      animation: animation,
-                      builder: (context, child) {
-                        return Text('${animation.value}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: 'SpecialElite',
-                                color: Colors.white));
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              FutureBuilder<bool>(
-                  future: getFlag(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: options.length,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    30.0, 8.0, 30.0, 8.0),
-                                child: RaisedButton(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side: BorderSide(color: Colors.white)),
-                                  color: Colors.transparent,
-                                  onPressed: () {
-                                    takeMeAhead(index);
-                                  },
-                                  child: Text(options[index],
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.merriweather(
-                                          textStyle: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.normal))),
-                                ),
-                              ),
-                            );
-                          });
-                    } else {
-                      return Container();
-                    }
-                  })
-            ],
-          ),
-        )));
-  }
-
-  void takeMeAhead(int index) {
-    if (index == 0) {
-      Navigator.pushReplacementNamed(context, '/1.a');
-    } else if (index == 1) {
-      Navigator.pushReplacementNamed(context, '/1.b');
-    }
-  }
-}
-
-class TypewriterTween extends Tween<String> {
-  TypewriterTween({String begin = '', String end})
-      : super(begin: begin, end: end);
-
-  @override
-  String lerp(double t) {
-    var cutoff = (end.length * t).round();
-    return end.substring(0, cutoff);
+    return FutureStory(
+      story: story,
+      options: options,
+      seconds: 18,
+      takeMeAhead: (int index) {
+        if (index == 0) {
+          Navigator.pushReplacementNamed(context, '/1.a');
+        } else if (index == 1) {
+          Navigator.pushReplacementNamed(context, '/1.b');
+        }
+      },
+    );
   }
 }
