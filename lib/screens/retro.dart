@@ -29,6 +29,7 @@ class _PastHomeState extends State<PastHome> {
               Navigator.pop(context);
             });
           });
+          return Future<bool>.value(false);
         },
         child: Scaffold95(
             title: "The Past",

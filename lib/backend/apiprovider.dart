@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 import 'package:time_machine/models/question_model.dart';
 import 'dart:convert';
@@ -67,6 +66,7 @@ class ApiProvider {
       return parsedResponse;
     } catch (error) {
       print("error: $error");
+      return {"error": error};
     }
   }
 

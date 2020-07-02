@@ -9,7 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class QuizPage extends StatefulWidget {
   final List<Question> questionList;
-  int id;
+  final int id;
   QuizPage(this.questionList, this.id);
   @override
   _QuizPageState createState() => _QuizPageState();
@@ -158,7 +158,7 @@ class _QuizPageState extends State<QuizPage> {
     try {
       return WillPopScope(
         onWillPop: () {
-          if (i != 0)
+          if (i != 0) {
             dialogBox95(
                 titleText: "Timed Quiz!",
                 contentText: "You cannot go to the previous question :(",
@@ -166,8 +166,11 @@ class _QuizPageState extends State<QuizPage> {
                 onPressed: () => () {
                       Navigator.pop(context);
                     });
-          else
+            return Future<bool>.value(false);
+          } else {
             Navigator.pop(context);
+            return Future<bool>.value(true);
+          }
         },
         child: Scaffold95(
           title: id == 1 ? "Tech Quiz" : "Cars Quiz",
