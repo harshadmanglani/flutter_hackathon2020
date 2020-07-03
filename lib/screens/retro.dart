@@ -4,8 +4,7 @@ import 'package:flutter95/flutter95.dart';
 import 'package:time_machine/backend/apiprovider.dart';
 import 'package:time_machine/backend/question.dart';
 import 'package:time_machine/models/question_model.dart';
-
-//categories of the retro quizzes
+import 'package:cached_network_image/cached_network_image.dart';
 
 class PastHome extends StatefulWidget {
   @override
@@ -27,13 +26,12 @@ class _PastHomeState extends State<PastHome> {
     for (var i = 0; i < 7; i++) {
       imgIndex = i + 1;
       homeImages.add(Container(
-        height: 400,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/img$imgIndex.jpg"),
-                fit: BoxFit.cover)),
-      ));
+          height: 200,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: CachedNetworkImageProvider(
+                      "https://github.com/harshadmanglani/flutter_hackathon2020/raw/assets/assets/img$imgIndex.jpg"),
+                  fit: BoxFit.cover))));
       _scrollController =
           ScrollController(initialScrollOffset: 100.0, keepScrollOffset: true);
     }
