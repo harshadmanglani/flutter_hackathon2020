@@ -28,6 +28,7 @@ class _TimeMachineState extends State<TimeMachine> {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       routes: {
         '/home': (BuildContext context) => Home(),
         '/wormhole': (BuildContext context) => WormHole(),

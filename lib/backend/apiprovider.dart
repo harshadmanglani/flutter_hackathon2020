@@ -25,14 +25,10 @@ class ApiProvider {
           "query":
               '{ questionsModel(search:"Cars"){ question, options, answer, photolink} }'
         });
-      // print(response.body);
-      // responseFromApi = json.encode(response.body);
-      // print(response.body);
       responseFromApi = response.body.replaceAll(r'\', '');
       responseFromApi = responseFromApi.replaceAll(r'ions":"{', 'ions":{');
       responseFromApi = responseFromApi.replaceAll(r'}","ans', '},"ans');
       parsedResponse = json.decode(responseFromApi);
-      // print(parsedResponse);
       unparsedResponse = parsedResponse["data"]["questionsModel"];
       for (int i = 0; i < unparsedResponse.length; i++) {
         questionList.add(Question(
@@ -60,7 +56,6 @@ class ApiProvider {
         "query":
             'mutation{ createLeader(username:"$username", scorestr:"$score", category:"$category"){ id, score, username, category} }'
       });
-      // print(response.body);
       responseFromApi = response.body.replaceAll(r'\', '');
       parsedResponse = json.decode(responseFromApi);
       return parsedResponse;
@@ -76,12 +71,8 @@ class ApiProvider {
       Response response;
       response = await post(baseUrl,
           body: {"query": '{ leaderboardModel{ username, score, category} }'});
-      // print(response.body);
-      // responseFromApi = json.encode(response.body);
-      // print(response.body);
       responseFromApi = response.body.replaceAll(r'\', '');
       parsedResponse = json.decode(responseFromApi);
-      // print(parsedResponse);
       unparsedResponse = parsedResponse["data"]["leaderboardModel"];
       for (int i = 0; i < unparsedResponse.length; i++) {
         print(unparsedResponse[i]);

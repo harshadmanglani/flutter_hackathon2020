@@ -48,7 +48,6 @@ class _PastHomeState extends State<PastHome> {
               Item95(
                   label: 'Leaderboard',
                   onTap: (context) {
-                    print("hi");
                     setState(() {
                       toolBar = 1;
                     });

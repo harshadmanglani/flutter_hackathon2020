@@ -189,12 +189,6 @@ class _QuizPageState extends State<QuizPage> {
                     ),
                   ),
                 ),
-                // StreamBuilder<String>(
-                // stream: _urlStream,
-                // builder: (context, snapshot) {
-                // print(snapshot.data);
-                // if (snapshot.hasData) {
-                // return
                 questionList[i].photoUrl != null
                     ? Container(
                         height: 200,
@@ -207,11 +201,6 @@ class _QuizPageState extends State<QuizPage> {
                         child: Text("No image to display",
                             style: Flutter95.textStyle),
                       ), //;
-                // } else {
-                // print("hi");
-                // return Text("No image to display.");
-                // }
-                // }),
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -257,6 +246,7 @@ class _QuizPageState extends State<QuizPage> {
       String contentText}) {
     return showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (context) => AlertDialog(
               title: Text(titleText, style: Flutter95.textStyle),
               content: Text(
