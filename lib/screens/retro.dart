@@ -17,6 +17,27 @@ class _PastHomeState extends State<PastHome> {
   dynamic retroFont =
       GoogleFonts.ibmPlexMono(textStyle: TextStyle(fontSize: 20.0));
   int toolBar = 0;
+  List<Widget> homeImages = [];
+  int imgIndex;
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    for (var i = 0; i < 7; i++) {
+      imgIndex = i + 1;
+      homeImages.add(Container(
+        height: 400,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/img$imgIndex.jpg"),
+                fit: BoxFit.cover)),
+      ));
+      _scrollController =
+          ScrollController(initialScrollOffset: 100.0, keepScrollOffset: true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,21 +85,15 @@ class _PastHomeState extends State<PastHome> {
   }
 
   Widget retroBody() {
-    int imgIndex;
     return Expanded(
-      child: ListView.builder(
-          itemCount: 7,
-          itemBuilder: (context, index) {
-            print(index);
-            imgIndex = index + 1;
-            return Container(
-              height: 400,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assets/img$imgIndex.jpg"),
-                      fit: BoxFit.cover)),
-            );
-          }),
+      child: ListWheelScrollView(
+          controller: _scrollController,
+          itemExtent: 400.0,
+          diameterRatio: 2.5,
+          // useMagnifier: true,
+          // magnification: 1.2,
+          // physics: FixedExtentScrollPhysics(),
+          children: homeImages),
     );
   }
 
@@ -200,11 +215,7 @@ class _LeaderBoardState extends State<LeaderBoard> {
                                   Expanded(
                                     flex: 4,
                                     child: Text(
-                                      snapshot.data[index].category == "Cars" ||
-                                              snapshot.data[index].category ==
-                                                  "Tech"
-                                          ? '${snapshot.data[index].category}'
-                                          : "",
+                                      '${snapshot.data[index].category}',
                                       style: Flutter95.textStyle,
                                     ),
                                   ),

@@ -13,17 +13,19 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   AnimationController _controller, _left, _right;
   CurvedAnimation _curve, _leftCurve, _rightCurve;
   double x = 0.0, y = 0.0;
+  bool _pastButtonVisible, _futureButtonVisible;
   int _animationValue = 0;
 
   @override
   void initState() {
     super.initState();
-    normalAnimation();
-    pastAnimation();
-    futureAnimation();
+    _pastButtonVisible = _futureButtonVisible = true;
+    normalAnimationFunc();
+    pastAnimationFunc();
+    futureAnimationFunc();
   }
 
-  normalAnimation() {
+  normalAnimationFunc() {
     _controller = AnimationController(
         vsync: this, duration: Duration(milliseconds: 1500));
 
@@ -41,7 +43,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     _controller.repeat(reverse: true);
   }
 
-  pastAnimation() {
+  pastAnimationFunc() {
     _left = AnimationController(
         vsync: this, duration: Duration(milliseconds: 3000));
 
@@ -57,7 +59,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     });
   }
 
-  futureAnimation() {
+  futureAnimationFunc() {
     _right = AnimationController(
         vsync: this, duration: Duration(milliseconds: 3000));
 
@@ -74,8 +76,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   dynamic buttonShape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20.0),
-      side: BorderSide(color: Colors.white30));
+      borderRadius: BorderRadius.circular(40.0),
+      side: BorderSide(color: Colors.transparent));
 
   @override
   Widget build(BuildContext context) {
@@ -93,69 +95,90 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
               // SizedBox(height: 40.0),
               SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
+                  padding: const EdgeInsets.only(top: 70.0),
                   child: Center(
                       child: Text("Time Machine",
                           style: GoogleFonts.orbitron(
                               textStyle: TextStyle(
-                                  fontSize: 30.0, color: Colors.white)))),
+                                  fontSize: 35.0, color: Colors.white)))),
                 ),
               ),
+              SizedBox(height: 40.0),
+              AnimatedContainer(
+                height:
+                    _futureButtonVisible ? _pastButtonVisible ? 50 : 0 : 100,
+                width:
+                    _futureButtonVisible ? _pastButtonVisible ? 180 : 0 : 200,
+                duration: Duration(seconds: 1),
+                child: RaisedButton(
+                    color: Colors.transparent,
+                    shape: buttonShape,
+                    onPressed: () {
+                      setState(() {
+                        _futureButtonVisible = false;
+                      });
+                      playPastAnimation();
+                      Future.delayed(const Duration(seconds: 2), () {
+                        setState(() {
+                          Navigator.pushNamed(context, '/wormhole');
+                        });
+                      });
+                      Future.delayed(const Duration(seconds: 6), () {
+                        setState(() {
+                          Navigator.pushReplacementNamed(context, '/past');
+                          resetAnimation();
+                        });
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(36.0, 8.0, 36.0, 8.0),
+                      child: Text("Past",
+                          style: GoogleFonts.cinzel(
+                              textStyle: TextStyle(
+                                  fontSize: 24.0,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold))),
+                    )),
+              ),
               SizedBox(height: 20.0),
-              RaisedButton(
-                  color: Colors.transparent,
-                  shape: buttonShape,
-                  onPressed: () {
-                    playPastAnimation();
-                    Future.delayed(const Duration(seconds: 2), () {
+              AnimatedContainer(
+                height:
+                    _pastButtonVisible ? _futureButtonVisible ? 50 : 0 : 100,
+                width:
+                    _pastButtonVisible ? _futureButtonVisible ? 180 : 0 : 200,
+                duration: Duration(seconds: 1),
+                child: RaisedButton(
+                    color: Colors.transparent,
+                    shape: buttonShape,
+                    onPressed: () {
                       setState(() {
-                        Navigator.pushNamed(context, '/wormhole');
+                        _pastButtonVisible = false;
                       });
-                    });
-                    Future.delayed(const Duration(seconds: 6), () {
-                      setState(() {
-                        Navigator.pushReplacementNamed(context, '/past');
-                        resetAnimation();
+                      playFutureAnimation();
+                      Future.delayed(const Duration(seconds: 2), () {
+                        setState(() {
+                          Navigator.pushNamed(context, '/wormhole');
+                        });
                       });
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(36.0, 8.0, 36.0, 8.0),
-                    child: Text("Past",
-                        style: GoogleFonts.cinzel(
-                            textStyle: TextStyle(
-                                fontSize: 24.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold))),
-                  )),
-              SizedBox(height: 30.0),
-              RaisedButton(
-                  color: Colors.transparent,
-                  shape: buttonShape,
-                  onPressed: () {
-                    playFutureAnimation();
-                    Future.delayed(const Duration(seconds: 2), () {
-                      setState(() {
-                        Navigator.pushNamed(context, '/wormhole');
+                      Future.delayed(const Duration(seconds: 6), () {
+                        setState(() {
+                          Navigator.pushReplacementNamed(context, '/future');
+                          resetAnimation();
+                        });
                       });
-                    });
-                    Future.delayed(const Duration(seconds: 6), () {
-                      setState(() {
-                        Navigator.pushReplacementNamed(context, '/future');
-                        resetAnimation();
-                      });
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                    child: Text("Future",
-                        style: GoogleFonts.cinzel(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.bold))),
-                  )),
-              SizedBox(height: 170),
+                    },
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                      child: Text("Future",
+                          style: GoogleFonts.cinzel(
+                              textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold))),
+                    )),
+              ),
+              SizedBox(height: 145),
               hoppingTimeMachine(
                 imagePath: 'assets/time_machine.png',
               ),
@@ -180,29 +203,37 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   playPastAnimation() {
     setState(() {
+      print("playing past animation: $_animationValue");
       _controller.stop();
+      pastAnimationFunc();
       _right.stop();
       _animationValue = 1;
-      print(_animationValue);
+      print("playing past animation: $_animationValue");
       _left.forward();
     });
   }
 
   playFutureAnimation() {
     setState(() {
+      print("playing future animation: $_animationValue");
       _controller.stop();
       _left.stop();
+      futureAnimationFunc();
       _animationValue = 2;
-      print(_animationValue);
+      print("playing future animation: $_animationValue");
       _right.forward();
     });
   }
 
   resetAnimation() {
     setState(() {
+      _pastButtonVisible = _futureButtonVisible = true;
+      print("reset animation value: $_animationValue");
       _left.stop();
       _right.stop();
+      normalAnimationFunc();
       _animationValue = 0;
+      print("reset animation value: $_animationValue");
       _controller.repeat(reverse: true);
     });
   }
