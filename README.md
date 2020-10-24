@@ -7,6 +7,6 @@ Come, hop on our Time Machine, a gateway to the past and the future.
 A nostalgic quiz that will take you back when we were kids dreaming about cars and technology which appeared to be nothing but magic.  
 An interactive experience that would take you to a cyberpunk future.
 
-## Technology Used
+## Technologies Used
 Flutter, Microsoft Azure, Django-GraphQL API, MySQL
 
